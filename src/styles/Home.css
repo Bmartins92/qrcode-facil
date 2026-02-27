@@ -1,0 +1,557 @@
+/* ================================================================
+   Home.css — Estilos da página principal
+   Importado em: src/pages/Home.jsx
+   ================================================================ */
+
+/* ── HEADER ─────────────────────────────────────────────────────
+   Cabeçalho fixo (sticky) com efeito "vidro fosco" (glassmorphism).
+   position: sticky + top: 0 faz ele grudar no topo ao rolar.
+   backdrop-filter aplica desfoque no conteúdo que passa por baixo. */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 200; /* Alto para ficar acima de modais e dropdowns */
+  width: 100%;
+  background: rgba(13, 13, 13, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px); /* Safari */
+  border-bottom: 1px solid var(--border);
+}
+
+/* Wrapper interno do header: limita largura em monitores 4K */
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Logomarca textual */
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  cursor: default;
+}
+.logo span { color: var(--accent); } /* "Fácil" em verde */
+
+/* Badge "100% Grátis" — pílula com borda verde */
+.badge-free {
+  font-size: 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1.5px solid rgba(0, 229, 160, 0.5);
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+/* ── PAGE WRAPPER ────────────────────────────────────────────────
+   Contentor central: limita a largura e centraliza o conteúdo.
+   flex: 1 faz ele crescer, empurrando o footer para o rodapé.    */
+.page-wrapper {
+  width: 100%;
+  max-width: var(--max-content); /* 620px — não estica em telas largas */
+  margin: 0 auto;
+  padding: 0 20px;               /* Margem lateral em mobile */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HERO ────────────────────────────────────────────────────────
+   Seção de apresentação. Totalmente centralizada, com espaçamento
+   generoso e efeito de brilho decorativo ao fundo.               */
+.hero {
+  text-align: center;
+  padding: 72px 0 48px;
+  position: relative;
+  overflow: hidden; /* Impede que o brilho vaze para fora */
+}
+
+/* Brilho radial decorativo atrás do conteúdo do hero.
+   pointer-events: none garante que não bloqueia cliques. */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 229, 160, 0.07) 0%,
+    rgba(123, 97, 255, 0.04) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Tag decorativa acima do título: "✦ GERADOR DE QR CODE ✦"
+   display: inline-flex + margin: 0 auto centraliza horizontalmente */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(0, 229, 160, 0.07);
+  border: 1px solid rgba(0, 229, 160, 0.18);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── TÍTULO DO HERO ──────────────────────────────────────────────
+   Estrutura em duas linhas controladas via spans.
+   CORREÇÃO: font-size usa clamp() para nunca quebrar a palavra
+   "instantaneamente" — o mínimo (1.75rem) cabe em telas de 320px. */
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  /* Sem font-size aqui — cada linha tem o seu próprio */
+}
+
+/* Linha 1: "Gere seu QR Code" — tamanho maior */
+.hero-linha1 {
+  display: block;                  /* Força quebra de linha após este span */
+  font-size: clamp(1.6rem, 4.5vw, 2.8rem); /* Fluido: 1.6rem → 2.8rem */
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+/* Linha 2: "instantaneamente" — tamanho controlado para nunca cortar.
+   clamp(1.4rem, 3.8vw, 2.4rem):
+     - 1.4rem em telas de 320px (cabe a palavra inteira sem quebrar)
+     - proporcional entre 320px e 900px
+     - máximo 2.4rem em telas grandes
+   O gradiente verde→roxo dá destaque visual à palavra. */
+.hero-linha2 {
+  display: block;
+  font-size: clamp(1.4rem, 3.8vw, 2.4rem);
+  /* Técnica de gradiente em texto via background-clip */
+  background: linear-gradient(135deg, var(--accent) 30%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap; /* Impede quebra da palavra em qualquer largura */
+}
+
+/* Subtítulo descritivo abaixo do H1.
+   max-width: 420px limita a largura para ~65 chars por linha,
+   considerado ideal para leitura. margin: 0 auto centraliza. */
+.hero p {
+  font-size: 0.97rem;
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── CARD ────────────────────────────────────────────────────────
+   Container principal do formulário de geração.                  */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 100%;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 60px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+/* Linha decorativa no topo do card (gradiente roxo → verde) */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ── ABAS ────────────────────────────────────────────────────────
+   Tabs: URL / Texto / Pix — ficam lado a lado com flex.          */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+/* Botão individual de cada aba.
+   flex: 1 faz todas ocuparem a mesma largura.                    */
+.tab {
+  flex: 1;
+  padding: 10px 6px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* Aba selecionada: fundo e texto em destaque */
+.tab.active {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.tab:hover:not(.active) { color: var(--text); }
+
+/* ── LABELS ──────────────────────────────────────────────────────
+   Texto descritivo acima de cada campo do formulário.            */
+.input-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+  display: block;
+}
+
+/* Wrapper de cada campo — espaçamento inferior */
+.input-wrap { margin-bottom: 14px; }
+
+/* ── CAMPOS DE FORMULÁRIO ────────────────────────────────────────
+   Estilo base compartilhado por <input> e <textarea>.
+   outline: none remove o contorno azul padrão do browser.       */
+.input-field {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: none;
+}
+
+/* Foco: borda verde + anel suave */
+.input-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.08);
+}
+
+.input-field::placeholder { color: #333; }
+
+/* Borda vermelha em campos com erro de validação */
+.input-field.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.08);
+}
+
+/* ── GRID PIX ────────────────────────────────────────────────────
+   Dois campos lado a lado: Cidade | Valor.
+   Em mobile vira coluna única (ver media query).                 */
+.pix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+/* Aviso sobre o padrão EMV do Pix */
+.pix-info {
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: rgba(0, 229, 160, 0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 229, 160, 0.1);
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── SLIDER DE TAMANHO ───────────────────────────────────────────
+   Linha com label, slider e valor numérico.                      */
+.size-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.size-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* accent-color define a cor do indicador do slider */
+.size-input {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.size-value {
+  font-size: 0.8rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 52px;
+  text-align: right;
+}
+
+/* ── MENSAGEM DE ERRO ────────────────────────────────────────────*/
+.error-msg {
+  font-size: 0.8rem;
+  color: var(--danger);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── BOTÃO GERAR QR ──────────────────────────────────────────────
+   Gradiente diagonal roxo → verde com texto preto.               */
+.btn-generate {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
+  color: #000;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 24px rgba(0, 229, 160, 0.2);
+}
+
+.btn-generate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 229, 160, 0.3);
+}
+
+.btn-generate:active  { transform: translateY(0); }
+
+.btn-generate:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── RESULTADO DO QR CODE ────────────────────────────────────────
+   Animação fadeUp: aparece subindo suavemente de baixo.          */
+.qr-result {
+  margin-top: 28px;
+  animation: fadeUp 0.35s ease forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Centraliza o QR e o botão de download */
+.qr-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Tag de confirmação "✓ QR Code gerado com sucesso" */
+.qr-tag {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 14px;
+}
+
+/* Moldura branca ao redor do QR (fundo branco é obrigatório para leitura) */
+.qr-frame {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  display: inline-block;
+  box-shadow: var(--glow), 0 0 0 1px rgba(0, 229, 160, 0.12);
+  margin-bottom: 16px;
+}
+
+/* ── BOTÃO DOWNLOAD ──────────────────────────────────────────────
+   Estilo "outline ghost" — borda colorida, fundo transparente.   */
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.btn-download:hover {
+  background: var(--accent);
+  color: #000;
+  box-shadow: var(--glow);
+}
+
+/* ── BANNER DE ANÚNCIO ───────────────────────────────────────────
+   Área reservada para Google AdSense.
+   Borda tracejada sinaliza "espaço reservado".                   */
+.ad-banner {
+  width: 100%;
+  min-height: 90px; /* Altura padrão de banner leaderboard (728×90) */
+  background: var(--surface);
+  border: 1px dashed rgba(42, 42, 42, 0.8);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+/* ── FEATURES ────────────────────────────────────────────────────
+   Três cards de benefícios em grade.                             */
+.features {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 44px;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.feature-item:hover {
+  border-color: rgba(0, 229, 160, 0.25);
+  transform: translateY(-2px);
+}
+
+.feature-icon  { font-size: 1.3rem; margin-bottom: 7px; }
+.feature-title { font-size: 0.72rem; font-weight: 700; color: var(--text); margin-bottom: 3px; font-family: var(--font-display); }
+.feature-desc  { font-size: 0.66rem; color: var(--muted); }
+
+/* ── FOOTER ──────────────────────────────────────────────────────*/
+.footer {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  padding: 0 20px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.footer-left { font-size: 0.76rem; color: var(--muted); }
+.footer-left span { color: var(--accent); font-weight: 600; }
+
+.footer-right { display: flex; gap: 20px; }
+
+.footer-right a {
+  font-size: 0.76rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-right a:hover { color: var(--accent); }
+
+/* ── RESPONSIVIDADE ──────────────────────────────────────────────
+   Ajustes para diferentes tamanhos de tela.                      */
+
+/* Tablets (até 768px) */
+@media (max-width: 768px) {
+  .hero { padding: 52px 0 36px; }
+}
+
+/* Celulares (até 480px) */
+@media (max-width: 480px) {
+  .header-inner { padding: 13px 16px; }
+  .card         { padding: 22px 16px; }
+  .page-wrapper { padding: 0 12px; }
+  .hero         { padding: 44px 0 28px; }
+
+  /* Em mobile, Cidade e Valor ficam em coluna única */
+  .pix-grid { grid-template-columns: 1fr; }
+
+  /* Features em 2 colunas (3 ficaria pequeno demais) */
+  .features { grid-template-columns: 1fr 1fr; }
+
+  /* Footer centralizado */
+  .footer-inner  { justify-content: center; text-align: center; }
+  .footer-right  { justify-content: center; }
+
+  /* Abas com texto compacto */
+  .tab { font-size: 0.7rem; padding: 9px 3px; }
+}
+
+/* Telas muito pequenas (até 360px — celulares antigos) */
+@media (max-width: 360px) {
+  /* Esconde o emoji das abas para ganhar espaço */
+  .tab span { display: none; }
+}

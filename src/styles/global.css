@@ -1,0 +1,79 @@
+/* ================================================================
+   global.css — Estilos globais da aplicação QRCode Fácil
+   Importado em: src/main.jsx (aplicado em toda a aplicação)
+   ================================================================ */
+
+/* Carrega as fontes do Google Fonts:
+   Syne     → fonte geométrica forte, usada em títulos
+   DM Sans  → fonte humanista limpa, usada no corpo */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* Reset universal: zera margem e padding de todos os elementos.
+   box-sizing: border-box inclui padding/border na largura total,
+   o que torna o cálculo de layouts muito mais previsível. */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Variáveis CSS (custom properties) — tema da aplicação.
+   Definidas em :root para ficarem disponíveis globalmente.
+   Para mudar o tema, basta editar aqui — reflete em tudo. */
+:root {
+  /* ── Cores ── */
+  --bg:       #0d0d0d;   /* Fundo geral (preto profundo)         */
+  --surface:  #161616;   /* Superfície secundária (cards internos) */
+  --card:     #1c1c1c;   /* Fundo do card principal              */
+  --border:   #2a2a2a;   /* Bordas e divisórias                  */
+  --accent:   #00e5a0;   /* Verde-neon: cor de destaque principal */
+  --accent2:  #7b61ff;   /* Roxo: destaque secundário            */
+  --text:     #f0f0f0;   /* Texto principal (quase branco)       */
+  --muted:    #777777;   /* Texto de apoio / placeholders        */
+  --danger:   #ff4d6d;   /* Vermelho para erros de validação     */
+
+  /* ── Tipografia ── */
+  --font-display: 'Syne', sans-serif;     /* Fonte de títulos  */
+  --font-body:    'DM Sans', sans-serif;  /* Fonte de textos   */
+
+  /* ── Layout ── */
+  --radius:      16px;   /* Arredondamento padrão de bordas      */
+  --max-content: 620px;  /* Largura máxima do conteúdo central   */
+
+  /* ── Efeitos ── */
+  --glow: 0 0 40px rgba(0, 229, 160, 0.12); /* Brilho verde suave */
+}
+
+/* Base: html e body ocupam pelo menos toda a altura da tela.
+   -webkit-font-smoothing melhora a legibilidade das fontes no macOS/iOS. */
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+/* O React monta a aplicação dentro de <div id="root">.
+   flex + column: organiza header / conteúdo / footer em pilha vertical.
+   align-items: center: centraliza horizontalmente todo o conteúdo. */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Scrollbar personalizada (apenas Chromium/WebKit) */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Cor do texto selecionado pelo usuário */
+::selection {
+  background: rgba(0, 229, 160, 0.2);
+  color: var(--text);
+}

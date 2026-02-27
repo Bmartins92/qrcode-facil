@@ -1,0 +1,81 @@
+# ================================================================
+# .github/workflows/deploy.yml
+# Deploy automático no GitHub Pages via GitHub Actions
+#
+# Como funciona:
+# 1. Você faz "git push" para a branch "main"
+# 2. Este workflow executa automaticamente
+# 3. Faz o build do projeto com Vite (npm run build)
+# 4. Publica a pasta "dist" no GitHub Pages
+#
+# Resultado: site atualizado em poucos minutos após o push!
+# ================================================================
+
+name: Deploy QRCode Fácil no GitHub Pages
+
+# Gatilho: executa quando há push na branch "main"
+on:
+  push:
+    branches:
+      - main
+
+# Permissões necessárias para publicar no GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Garante que apenas um deploy rode por vez
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ── JOB 1: Build ───────────────────────────────────────────────
+  build:
+    runs-on: ubuntu-latest  # Máquina virtual Linux gratuita do GitHub
+
+    steps:
+      # 1. Faz checkout do código do repositório
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      # 2. Configura o Node.js (versão LTS recomendada)
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"  # Cache do npm para builds mais rápidos
+
+      # 3. Instala as dependências (equivale a "npm install")
+      - name: Instalar dependências
+        run: npm ci
+
+      # 4. Executa o build de produção do Vite (gera a pasta "dist")
+      - name: Build de produção
+        run: npm run build
+
+      # 5. Configura o GitHub Pages
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+
+      # 6. Empacota a pasta "dist" para upload
+      - name: Empacotar artefatos do build
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist  # Pasta gerada pelo "npm run build"
+
+  # ── JOB 2: Deploy ──────────────────────────────────────────────
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: build  # Só executa após o job "build" concluir com sucesso
+
+    steps:
+      # Publica os artefatos no GitHub Pages
+      - name: Deploy no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
