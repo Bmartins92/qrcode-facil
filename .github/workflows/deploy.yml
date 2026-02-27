@@ -20,8 +20,9 @@ on:
       - main
 
 # Permissões necessárias para publicar no GitHub Pages
+# contents: write — necessário para o enablement ativar o Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -56,8 +57,13 @@ jobs:
         run: npm run build
 
       # 5. Configura o GitHub Pages
+      # enablement: true ativa o Pages automaticamente caso ainda não esteja ativo
+      # token: é necessário para que a action tenha permissão de habilitar o Pages
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # 6. Empacota a pasta "dist" para upload
       - name: Empacotar artefatos do build
